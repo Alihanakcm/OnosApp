@@ -16,6 +16,9 @@
 package org.andasis.app;
 
 import org.onosproject.cfg.ComponentConfigService;
+import org.onosproject.net.device.DeviceService;
+//import org.onosproject.net.device.PortStatistics;
+//import org.onosproject.net.statistic.FlowStatisticService;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -35,24 +38,32 @@ import static org.onlab.util.Tools.get;
  * Skeletal ONOS application component.
  */
 @Component(immediate = true,
-           service = {SomeInterface.class},
-           property = {
-               "someProperty=Some Default String Value",
-           })
+        service = {SomeInterface.class},
+        property = {
+                "someProperty=Some Default String Value",
+        })
 public class AppComponent implements SomeInterface {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-
-    /** Some configurable property. */
+    DeviceStatistics deviceStatistics = new DeviceStatistics();
+    /**
+     * Some configurable property.
+     */
     private String someProperty;
 
     @Reference(cardinality = ReferenceCardinality.MANDATORY)
     protected ComponentConfigService cfgService;
 
+    @Reference(cardinality = ReferenceCardinality.MANDATORY)
+    protected DeviceService deviceService;
+
+
     @Activate
     protected void activate() {
         cfgService.registerProperties(getClass());
-        log.info("Başarılı bi şekilde proje oluşturuldu");
+        log.info("Started");
+        deviceStatistics.setDeviceService(this.deviceService);
+        deviceStatistics.start();
     }
 
     @Deactivate

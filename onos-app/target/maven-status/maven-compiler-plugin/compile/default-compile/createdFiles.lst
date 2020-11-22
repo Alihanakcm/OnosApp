@@ -1,2 +1,5 @@
-org/andasis/app/AppComponent.class
+org/andasis/app/Calculation.class
 org/andasis/app/SomeInterface.class
+org/andasis/app/DeviceStatistics.class
+org/andasis/app/AppComponent.class
+org/andasis/app/ICalculation.class
