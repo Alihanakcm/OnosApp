@@ -38,53 +38,48 @@ public class DeviceStatistics extends Thread {
     @Override
     public void run() {
         super.run();
-        long packetCount = 0;
+        long beforePacket = 0;
+        long packetSize = 0;
         int counter = 0;
         Calculation calculation = new Calculation();
+
         while (true) {
             try {
                 Iterable<Device> devices = getDeviceService().getDevices();
-                log.info("-----------------");
-                log.info("| Cihaz sayisi:" + getDeviceService().getDeviceCount() + " |");
-                log.info("-----------------");
 
                 for (Device d : devices) {
 
-                    log.info(String.valueOf(d.id()));
                     List<PortStatistics> portStatisticsList = getDeviceService().getPortStatistics(d.id());
-
                     for (PortStatistics p : portStatisticsList) {
-                        log.info(String.valueOf(p.portNumber()));
-
-                        log.info("cihaz:" + d.id() + " Port:" + p.portNumber() + " packetRec:" +
-                                p.packetsReceived());
-//                        log.info("FARK:" + (p.packetsReceived() - packetCount));
-//                        packetCount = p.packetsReceived();
-                        if (p.packetsReceived() > 0 && p.packetsReceived() < 80) {
-                            calculation.addGroup1(p.packetsReceived());
-                        } else if (p.packetsReceived() >= 80 && p.packetsReceived() < 160) {
-                            calculation.addGroup2(p.packetsReceived());
-                        } else if (p.packetsReceived() >= 160 && p.packetsReceived() < 320) {
-                            calculation.addGroup3(p.packetsReceived());
-                        } else if (p.packetsReceived() >= 320 && p.packetsReceived() < 640) {
-                            calculation.addGroup4(p.packetsReceived());
-                        } else if (p.packetsReceived() >= 640 && p.packetsReceived() < 1280) {
-                            calculation.addGroup5(p.packetsReceived());
-                        } else if (p.packetsReceived() >= 1280 && p.packetsReceived() < 2560) {
-                            calculation.addGroup6(p.packetsReceived());
+                        packetSize = p.bytesReceived() / 1048576;
+                        System.out.println("Before :" + packetSize);
+                        packetSize = Math.abs(packetSize - beforePacket);
+                        System.out.println("DATA : " + packetSize);
+                        if (packetSize > 0 && packetSize < 80) {
+                            calculation.addGroup1(packetSize);
+                        } else if (packetSize >= 80 && packetSize < 160) {
+                            calculation.addGroup2(packetSize);
+                        } else if (packetSize >= 160 && packetSize < 320) {
+                            calculation.addGroup3(packetSize);
+                        } else if (packetSize >= 320 && packetSize < 640) {
+                            calculation.addGroup4(packetSize);
+                        } else if (packetSize >= 640 && packetSize < 1280) {
+                            calculation.addGroup5(packetSize);
+                        } else if (packetSize >= 1280 && packetSize < 2560) {
+                            calculation.addGroup6(packetSize);
                         } else {
                             continue;
                         }
+                        beforePacket = packetSize;
                     }
-//                    log.info("\n");
                 }
 
                 counter++;
                 log.info("COUNTER:" + counter);
-                if (counter == 10) {
+                if (counter == 5) {
                     log.info("***********************************");
                     log.info("***********************************");
-                    log.info("RESULT:" + calculation.setParameters());
+                    log.info("" + calculation.setParameters());
                     log.info("***********************************");
                     log.info("***********************************");
                     counter = 0;

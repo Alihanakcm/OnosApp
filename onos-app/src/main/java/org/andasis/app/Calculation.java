@@ -46,9 +46,10 @@ public class Calculation implements ICalculation {
     }
 
     @Override
-    public void calculateEntropy(ArrayList<Long> group) {
+    public double calculateEntropy(ArrayList<Long> group) {
         for (int i = 0; i < group.size(); i++) {
             counter = 1;
+            sumEntropy = 0;
             for (int j = i + 1; j < group.size(); j++) {
                 if (group.get(i) == group.get(j)) {
                     counter++;
@@ -56,19 +57,38 @@ public class Calculation implements ICalculation {
             }
 
             value = (counter / Double.parseDouble(String.valueOf(group.size())));
-            sumEntropy += (value) * Math.log(value) * (-1);
+            sumEntropy += (value) * (Math.log10(value) / Math.log10(2)) * (-1);
+            System.out.println("SUMENTROPY:" + sumEntropy);
         }
-        sumGroupEntropy += sumEntropy;
-        sumEntropy = 0;
+        return sumEntropy;
     }
 
     public double setParameters() {
-        calculateEntropy(group1);
-        calculateEntropy(group2);
-        calculateEntropy(group3);
-        calculateEntropy(group4);
-        calculateEntropy(group5);
-        calculateEntropy(group6);
+        sumGroupEntropy = 0;
+        sumGroupEntropy += calculateEntropy(group1);
+        sumGroupEntropy += calculateEntropy(group2);
+        sumGroupEntropy += calculateEntropy(group3);
+        sumGroupEntropy += calculateEntropy(group4);
+        sumGroupEntropy += calculateEntropy(group5);
+        sumGroupEntropy += calculateEntropy(group6);
+        for (long data : group1) {
+            System.out.println("GROUP 1 DATA : " + data);
+        }
+        for (long data : group2) {
+            System.out.println("GROUP 2 DATA : " + data);
+        }
+        for (long data : group3) {
+            System.out.println("GROUP 3 DATA : " + data);
+        }
+        for (long data : group4) {
+            System.out.println("GROUP 4 DATA : " + data);
+        }
+        for (long data : group5) {
+            System.out.println("GROUP 5 DATA : " + data);
+        }
+        for (long data : group6) {
+            System.out.println("GROUP 6 DATA : " + data);
+        }
         group1.clear();
         group2.clear();
         group3.clear();

@@ -17,7 +17,7 @@ public interface ICalculation {
 
     void addGroup6(long packetReceived);
 
-    void calculateEntropy(ArrayList<Long> group);
+    double calculateEntropy(ArrayList<Long> group);
 
     double setParameters();
 }
